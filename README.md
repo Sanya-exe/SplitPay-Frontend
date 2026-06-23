@@ -1,84 +1,67 @@
 # SplitPay 💙
 
-**Split expenses. Not friendships.**
+> **Split expenses. Not friendships.**
 
-SplitPay is a modern expense management application that helps individuals and groups track, split, and settle expenses with clarity.  
-Whether it’s personal spending or shared costs across trips, flats, or teams — SplitPay keeps money simple.
-
-### Backend Code [ FastAPI ] : 
-- https://github.com/mr-dev-prince/splitpay-server
----
-
-## ✨ Features
-
-### 👤 Personal Expenses
-
-- Track your own expenses without any splits
-- Visual insights into spending habits
-- Simple, clutter-free experience
-
-### 👥 Group Expenses
-
-- Create groups for trips, flats, or teams
-- Split expenses equally or custom
-- Clear balances: who owes whom, instantly
-
-### 📊 Smart Insights
-
-- Clean charts for spending trends
-- Monthly summaries and comparisons
-- Actionable insights, not noise
-
-### 🤖 Smart Automation
-
-- Automatic balance updates
-- No need to settle every expense manually
-- One-time splits, ongoing clarity
-
-### 🎨 Thoughtful UI & Motion
-
-- Bento-style layout
-- Micro-interactions with Framer Motion
-- Calm, blue-first fintech design language
+SplitPay is a premium, modern expense management application designed to help individuals and groups track, split, and settle expenses effortlessly. With a beautiful Bento-grid dashboard, smooth interactive animations, and smart debt-simplification algorithms, SplitPay takes the friction out of shared finances.
 
 ---
 
-## 🧱 Tech Stack
+## 🚀 Key Features
 
-**Frontend**
-
-- React + TypeScript
-- Vite
-- Tailwind CSS
-- Framer Motion
-- Recharts
-
-**Tooling**
-
-- Bun (package manager & runtime)
-- ESLint + Prettier
-- Modern asset optimization (dynamic imports)
+* 👤 **Personal Expenses**: Log and monitor your individual spending with clean, distraction-free trackers.
+* 👥 **Group Expenses**: Create groups for trips, roommates, or projects. Split bills evenly or using custom percentages.
+* 🧠 **Debt Minimization**: Employs a greedy debt simplification algorithm to settle group debts with the fewest possible transactions.
+* 📊 **Interactive Analytics**: Visualize your monthly spending categories and trends with responsive charts.
+* 🔒 **Secure Authentication**: Power-packed user sign-on, profile synchronization, and secure sessions via Clerk.
+* 🎨 **Premium UI/UX**: Designed with a calm blue fintech theme, custom icons, glassmorphism elements, and smooth transitions powered by Framer Motion.
 
 ---
 
-## 🚀 Getting Started
+## 🛠️ Tech Stack
 
-### Prerequisites
+* **Core**: React 18, TypeScript, Vite
+* **Styling**: Tailwind CSS
+* **Animations**: Framer Motion
+* **Charts**: Recharts
+* **Authentication**: Clerk React SDK
+
+---
+
+## ⚙️ Getting Started
+
+### 📋 Prerequisites
+
+Ensure you have **Node.js** (v18+) or **Bun** installed on your system.
+
+### 🔌 Setup Environment Variables
+
+Create a `.env` file in the root of the project and define your Clerk Publishable Key:
+
+```env
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+VITE_API_URL=http://localhost:8000/api/v1
+
 
 - Bun installed  
   👉 https://bun.sh
 
 ### Installation
 
-```bash
+# Using npm
+npm install
+
+# Or using Bun
 bun install
-```
+
 
 Run locally
 
-```bash
+# Using npm
+npm run dev
+
+# Or using Bun
 bun dev
-```
+
 
 The app will be available at:
 
@@ -86,29 +69,5 @@ The app will be available at:
 http://localhost:5173
 ```
 
-🧠 Design Philosophy
-
-- Clarity over cleverness
-
-- Motion with purpose
-
-- Data that tells a story
-
-- Finance without friction
-
-- SplitPay is designed to feel calm, transparent, and trustworthy — not overwhelming.
-
-🤝 Contributing
-
-- Contributions, ideas, and feedback are welcome.
-
-- Fork the repo
-
-- Create a feature branch
-
-- Commit with clarity
-
-- Open a PR
-
-📄 License
-MIT License
+📄 License:
+This project is licensed under the MIT License.
