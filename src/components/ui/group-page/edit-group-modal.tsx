@@ -1,0 +1,133 @@
+import { AnimatePresence, motion } from "motion/react";
+import React, { useState } from "react";
+import { Users, X } from "lucide-react";
+import {
+  fetchGroupData,
+  updateGroupName,
+} from "@/redux/features/groups/group-thunks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+
+import Loader from "../utils/loader-component";
+import { notifyError } from "@/lib/toast";
+
+interface Member {
+  id: number;
+  name: string;
+}
+
+interface EditGroupModalProps {
+  open: boolean;
+  onClose: () => void;
+  groupId: number;
+  groupName: string;
+  members: Member[];
+}
+
+const EditGroupModal: React.FC<EditGroupModalProps> = ({
+  open,
+  onClose,
+  groupId,
+  groupName,
+  members,
+}) => {
+  const [name, setName] = useState(groupName);
+
+  const { currentGroupUpdating } = useAppSelector((state) => state.groups);
+
+  const dispatch = useAppDispatch();
+
+  const handleUpdateGroupName = async () => {
+    try {
+      await dispatch(updateGroupName({ groupId, name }));
+      await dispatch(fetchGroupData({ groupId }));
+    } catch (error) {
+      if (error instanceof Error) {
+        notifyError(error.message);
+      } else {
+        notifyError("Failed to update group name");
+      }
+    }
+  };
+
+  if (!open) return null;
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+      />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.95, y: 20 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="fixed top-1/2 left-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl bg-white p-6 shadow-xl ring-1 ring-gray-100"
+      >
+        <div className="mb-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+              <Users size={18} />
+            </div>
+            <div>
+              <p className="text-lg font-semibold text-gray-800">Edit Group</p>
+              <p className="text-sm text-gray-500">
+                Update Group name or Remove members
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+          >
+            <X size={18} />
+          </button>
+        </div>
+        <div className="mb-5">
+          <label className="mb-1 block text-xs text-gray-500">Group name</label>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+          />
+          <button
+            onClick={handleUpdateGroupName}
+            className="mt-2 flex h-10 w-full items-center justify-center rounded-xl bg-blue-600 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            disabled={currentGroupUpdating}
+          >
+            {currentGroupUpdating ? (
+              <Loader loading={currentGroupUpdating} size="sm" />
+            ) : (
+              "Save name"
+            )}
+          </button>
+        </div>
+        <div>
+          <p className="mb-2 text-xs font-medium text-gray-500">Members</p>
+
+          <div className="max-h-56 space-y-2 overflow-y-auto pr-1">
+            {members.map((m) => (
+              <div
+                key={m.id}
+                className="flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-200 text-sm font-medium text-gray-600">
+                    {m.name.charAt(0).toUpperCase()}
+                  </div>
+                  <p className="text-sm text-gray-700">{m.name}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+export default EditGroupModal;

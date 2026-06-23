@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "types": ["vite/client"],
+    "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true
+  },
+  "include": ["src", "deprecated/dashboard-ui/dash.tsx", "deprecated/dashboard-ui/dashboard-nav.tsx", "deprecated/dashboard-ui/group-card.tsx", "deprecated/dashboard-ui/pending.tsx", "deprecated/dashboard-ui/recent-activity.tsx", "deprecated/dashboard-ui/recent-groups.tsx", "deprecated/dashboard-ui/snapshot.tsx", "deprecated/pages/dashboards.tsx", "deprecated/plans", "deprecated/notifications", "deprecated/profile", "deprecated/analytics"]
+}

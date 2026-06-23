@@ -1,0 +1,176 @@
+import type {
+  AdminGroupSettlementResponse,
+  Group,
+  GroupAnalyticsResponse,
+  GroupMember,
+  UpdateGroupNameResponse,
+  WeeklyActivityResponse,
+} from "./group-types";
+
+import { AxiosError } from "axios";
+import { api } from "@/lib/api";
+import { createAsyncThunk } from "@reduxjs/toolkit";
+
+export const fetchGroups = createAsyncThunk<
+  Group[],
+  void,
+  { rejectValue: string | undefined }
+>("groups/fetchGroups", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get("/groups");
+    return res.data as Group[];
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const createGroup = createAsyncThunk<
+  Group,
+  { name: string },
+  { rejectValue: string }
+>("groups/createGroup", async ({ name }, { dispatch, rejectWithValue }) => {
+  try {
+    const res = await api.post("/groups", { name });
+    dispatch(fetchGroups());
+    return res.data;
+  } catch (err) {
+    let message = "An unexpected error occurred.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const addGroupMember = createAsyncThunk<
+  GroupMember,
+  { groupId: number; name: string; email: string | null; phone: string | null },
+  { rejectValue: string | undefined }
+>(
+  "groups/addGroupMember",
+  async ({ groupId, name, email, phone }, { rejectWithValue }) => {
+    try {
+      const res = await api.post(`/groups/${groupId}/members`, {
+        name,
+        email,
+        phone,
+      });
+      return res.data;
+    } catch (error) {
+      let message = "An unexpected error occurred.";
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      return rejectWithValue(message);
+    }
+  },
+);
+
+export const fetchGroupData = createAsyncThunk<
+  Group,
+  { groupId: number },
+  { rejectValue: string | undefined }
+>("groups/fetchGroupData", async ({ groupId }, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`/groups/${groupId}`);
+    return res.data as Group;
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const deleteGroup = createAsyncThunk<
+  void,
+  { groupId: number },
+  { rejectValue: string | undefined }
+>("groups/deleteGroup", async ({ groupId }, { rejectWithValue }) => {
+  try {
+    const res = await api.delete(`/groups/${groupId}`);
+    console.log(res.data);
+    return res.data;
+  } catch (error) {
+    let message;
+    if (error instanceof AxiosError) {
+      message = error.response?.data?.detail;
+    } else if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const fetchWeeklyActivity = createAsyncThunk<
+  WeeklyActivityResponse,
+  { groupId: number },
+  { rejectValue: string | undefined }
+>("groups/fetchWeeklyActivity", async ({ groupId }, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`/groups/${groupId}/weekly-activity`);
+    return res.data as WeeklyActivityResponse;
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const updateGroupName = createAsyncThunk<
+  UpdateGroupNameResponse,
+  { groupId: number; name: string },
+  { rejectValue: string | undefined }
+>("groups/updateGroupName", async ({ groupId, name }, { rejectWithValue }) => {
+  try {
+    const res = await api.patch(`/groups/${groupId}`, { name });
+    return res.data as UpdateGroupNameResponse;
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const fetchAdminGroupSettlements = createAsyncThunk<
+  AdminGroupSettlementResponse[],
+  void,
+  { rejectValue: string | undefined }
+>("groups/fetchAdminGroupSettlments", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`/settements/admin-groups`);
+    return res.data as AdminGroupSettlementResponse[];
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
+
+export const fetchGroupAnalytics = createAsyncThunk<
+  GroupAnalyticsResponse,
+  void,
+  { rejectValue: string | undefined }
+>("groups/fetchGroupAnalytics", async (_, { rejectWithValue }) => {
+  try {
+    const res = await api.get(`/groups/analytics`);
+    return res.data as GroupAnalyticsResponse;
+  } catch (error) {
+    let message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    return rejectWithValue(message);
+  }
+});
