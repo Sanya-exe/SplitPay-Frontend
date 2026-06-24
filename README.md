@@ -31,7 +31,7 @@ SplitPay is a premium, modern expense management application designed to help in
 
 ### 📋 Prerequisites
 
-Ensure you have **Node.js** (v18+) or **Bun** installed on your system.
+Ensure you have **Node.js** (v18+).
 
 ### 🔌 Setup Environment Variables
 
@@ -42,25 +42,16 @@ VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
 VITE_API_URL=http://localhost:8000/api/v1
 
 
-- Bun installed  
-  👉 https://bun.sh
-
 ### Installation
 
 # Using npm
 npm install
-
-# Or using Bun
-bun install
 
 
 Run locally
 
 # Using npm
 npm run dev
-
-# Or using Bun
-bun dev
 
 
 The app will be available at:
