@@ -1,8 +1,8 @@
 import {
   AlertCircle,
   ArrowRight,
+  CheckCircle2,
   ChevronDown,
-  MoreHorizontal,
   ShieldCheck,
   User2,
   Users,
@@ -16,9 +16,40 @@ import { BlueLoader } from "@/components/ui/utils/custom-loader";
 import VerifyPinModal from "@/components/ui/verify-security-pin";
 import { fetchAdminGroupSettlements } from "@/redux/features/groups/group-thunks";
 import { useAuth } from "@clerk/clerk-react";
+import { api } from "@/lib/api";
+import { notifyError, notifySuccess } from "@/lib/toast";
 
-const AdminGroupCard = ({ group }: { group: AdminGroupSettlementResponse }) => {
+interface AdminGroupCardProps {
+  group: AdminGroupSettlementResponse;
+  onRefresh: () => void;
+}
+
+const AdminGroupCard = ({ group, onRefresh }: AdminGroupCardProps) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [settlingIdx, setSettlingIdx] = useState<number | null>(null);
+
+  const handleSettle = async (
+    idx: number,
+    fromMemberId: number,
+    toMemberId: number,
+    amount: number
+  ) => {
+    try {
+      setSettlingIdx(idx);
+      await api.post("/settlements/settle", {
+        group_id: group.group_id,
+        from_member_id: fromMemberId,
+        to_member_id: toMemberId,
+        amount,
+      });
+      notifySuccess("Settlement recorded successfully!");
+      onRefresh();
+    } catch (err: any) {
+      notifyError(err.response?.data?.detail || err.message || "Failed to settle debt");
+    } finally {
+      setSettlingIdx(null);
+    }
+  };
 
   return (
     <motion.div
@@ -85,12 +116,24 @@ const AdminGroupCard = ({ group }: { group: AdminGroupSettlementResponse }) => {
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-3">
                     <span className="text-md font-black text-rose-500">
                       ₹{debt.amount.toLocaleString()}
                     </span>
-                    <button className="rounded-lg p-1 text-gray-300 hover:bg-gray-50 hover:text-gray-600">
-                      <MoreHorizontal size={18} />
+                    <button
+                      onClick={() =>
+                        handleSettle(
+                          idx,
+                          debt.from_member_id,
+                          debt.to_member_id,
+                          debt.amount
+                        )
+                      }
+                      disabled={settlingIdx === idx}
+                      className="flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition hover:bg-emerald-700 disabled:opacity-50"
+                    >
+                      <CheckCircle2 size={13} />
+                      {settlingIdx === idx ? "Settling..." : "Settle"}
                     </button>
                   </div>
                 </div>
@@ -149,7 +192,11 @@ const GroupAdminPage: React.FC = () => {
               </div>
             ) : (
               adminGroupSettlements.map((group) => (
-                <AdminGroupCard key={group.group_id} group={group} />
+                <AdminGroupCard
+                  key={group.group_id}
+                  group={group}
+                  onRefresh={() => dispatch(fetchAdminGroupSettlements())}
+                />
               ))
             )}
           </div>
